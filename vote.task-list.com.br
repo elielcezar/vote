@@ -1,0 +1,50 @@
+server {
+    server_name vote.task-list.com.br;
+
+    # Diretório raiz para o aplicativo React
+    root /var/www/vote.task-list.com.br/front/dist;
+    index index.html;
+
+    # Configuração para SPA (Single Page Application)
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Aumentar para 10MB
+    client_max_body_size 10m;
+
+    # Configuração para a API
+    location /api/ {
+        proxy_pass http://localhost:4000/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Configuração para uploads
+    location /uploads/ {
+        alias /var/www/task-list.com.br/app/uploads/;
+    }
+
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/vote.task-list.com.br/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/vote.task-list.com.br/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+}
+
+server {
+    if ($host = vote.task-list.com.br) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name vote.task-list.com.br;
+    return 301 https://$host$request_uri;
+
+
+}
