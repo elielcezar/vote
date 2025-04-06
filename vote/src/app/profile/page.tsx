@@ -8,13 +8,13 @@ import Button from '@/components/Button';
 import { getCookie, deleteCookie } from 'cookies-next';
 
 // Definição da interface Participant para uso no estado
-interface Participant {
+/*interface Participant {
   id: number;
   name: string;
   email: string;
   role: string;
   createdAt: string;
-}
+}*/
 
 // Tipo para os dados de atualização
 interface UpdateProfileData {
@@ -29,7 +29,6 @@ export default function ProfilePage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [participant, setParticipant] = useState<Participant | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -88,7 +87,7 @@ export default function ProfilePage() {
     };
     
     fetchProfile();
-  }, [router]);
+  }, [router, formData]);
 
   // Lidar com alterações no formulário
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -222,7 +221,12 @@ export default function ProfilePage() {
               onClick={() => {
                 localStorage.removeItem('voteToken');
                 deleteCookie('voteToken');
-                setParticipant(null);
+                setFormData({
+                  name: '',
+                  email: '',
+                  newPassword: '',
+                  confirmPassword: ''
+                });
                 toast.success('Sessão encerrada com sucesso');
                 setTimeout(() => {
                   router.push('/');
