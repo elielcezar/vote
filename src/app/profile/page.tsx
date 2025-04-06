@@ -87,7 +87,7 @@ export default function ProfilePage() {
     };
     
     fetchProfile();
-  }, [router, formData]);
+  }, [router]);
 
   // Lidar com alterações no formulário
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -106,7 +106,7 @@ export default function AdminPage() {
       let response;
       
       if (editingProject) {
-        // Atualizar projeto existente (API para endpoint de edição)
+        // Atualizar projeto existente
         response = await fetch(`/api/projects/${editingProject.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },

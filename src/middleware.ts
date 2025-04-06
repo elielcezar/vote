@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Rotas que requerem autenticação como administrador
-const PROTECTED_ROUTES = ['/admin', '/results'];
+const PROTECTED_ROUTES = ['/admin', '/results', '/promote'];
 
 export async function middleware(request: NextRequest) {
   // Obter token do cookie
@@ -46,5 +46,5 @@ export async function middleware(request: NextRequest) {
 
 // Configurar os caminhos para os quais o middleware deve ser executado
 export const config = {
-  matcher: ['/admin/:path*', '/results/:path*'],
+  matcher: ['/admin/:path*', '/results/:path*', '/promote/:path*'],
 }; 
