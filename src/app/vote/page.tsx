@@ -7,6 +7,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import ProjectCard from '@/components/ProjectCard';
 import VoteForm from '@/components/VoteForm';
 import { getCookie } from 'cookies-next';
+import { setCookie, deleteCookie } from 'cookies-next';
 
 interface Project {
   id: number;
@@ -18,6 +19,7 @@ interface Project {
 export default function VotePage() {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
+  const [participant, setParticipant] = useState<Participant | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -101,21 +103,40 @@ export default function VotePage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
+    <main className="min-h-screen bg-gradient-to-b from-gray-100 to-white py-12">
       <div className="container mx-auto px-4">
-        <header className="text-center mb-12">
+        <header className="text-center mb-6">
           <h1 className="text-4xl font-bold text-blue-800 mb-2">Votação de Projetos</h1>
-          <p className="text-xl text-gray-600 mb-4">
-            Selecione um projeto para avaliar
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/" className="text-blue-600 hover:underline">
-              Voltar para página inicial
-            </Link>
-            <Link href="/profile" className="text-purple-600 hover:underline">
-              Editar meu perfil
-            </Link>
-          </div>
+          {!selectedProject ? (
+            <>
+              <p className="text-xl text-gray-600 mb-4">
+                Selecione um projeto para avaliar
+              </p>
+
+              <div className="flex gap-4 justify-center">            
+                <Link href="/profile" className="text-purple-600 hover:underline">Editar meu perfil</Link>
+                <button 
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        localStorage.removeItem('voteToken');
+                      }
+                      deleteCookie('voteToken');
+                      setToken(null);
+                      setParticipant(null);
+                      toast.success('Sessão encerrada com sucesso');
+                      setTimeout(() => {
+                        router.push('/');
+                      }, 1500);
+                    }}
+                    className="text-red-600 hover:text-red-800 font-medium"
+                  >
+                  Sair
+                </button>
+              </div>
+            </>
+
+          ) : null}
+          
         </header>
 
         {isLoading ? (

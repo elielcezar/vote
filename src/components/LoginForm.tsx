@@ -40,10 +40,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
       <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
       
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
-            Email
-          </label>
+        <div className="mb-4">        
           <input
             id="email"
             type="email"
@@ -60,10 +57,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading = false }) =>
           )}
         </div>
         
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
-            Senha
-          </label>
+        <div className="mb-6">         
           <input
             id="password"
             type="password"

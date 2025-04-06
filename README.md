@@ -56,11 +56,8 @@ npm run dev
 ## Deploy em Produção
 
 ```bash
-# Compilar para produção
-npm run build
-
-# Iniciar o servidor
-npm start
+# Compilar para produção (gitpull/install/build/restart via package.json)
+npm run deploy
 ```
 
 ## Estrutura do Projeto

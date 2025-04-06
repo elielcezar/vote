@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Button from './Button';
 
 interface RegisterFormProps {
@@ -58,10 +59,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
       <h2 className="text-2xl font-bold mb-6 text-center">Registrar para Votar</h2>
       
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
-            Nome Completo
-          </label>
+        <div className="mb-4">          
           <input
             id="name"
             type="text"
@@ -78,10 +76,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
           )}
         </div>
         
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
-            Email
-          </label>
+        <div className="mb-4">         
           <input
             id="email"
             type="email"
@@ -98,10 +93,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
           )}
         </div>
         
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
-            Senha
-          </label>
+        <div className="mb-4">         
           <input
             id="password"
             type="password"
@@ -118,10 +110,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
           )}
         </div>
         
-        <div className="mb-6">
-          <label htmlFor="confirmPassword" className="block text-gray-700 font-medium mb-2">
-            Confirmar Senha
-          </label>
+        <div className="mb-6">         
           <input
             id="confirmPassword"
             type="password"
@@ -146,6 +135,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading = false
           {isLoading ? 'Registrando...' : 'Registrar'}
         </Button>
       </form>
+
+      <Link href="/" className="text-blue-600 hover:underline">
+                Voltar para login
+              </Link>
     </div>
   );
 };

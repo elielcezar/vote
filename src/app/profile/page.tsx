@@ -230,7 +230,7 @@ export default function ProfilePage() {
                 toast.success('Sessão encerrada com sucesso');
                 setTimeout(() => {
                   router.push('/');
-                }, 1500); // Atraso para permitir que o usuário veja a mensagem de sucesso
+                }, 1500);
               }}
               className="text-red-600 hover:text-red-800 font-medium"
             >

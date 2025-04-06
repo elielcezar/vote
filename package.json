@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "git pull && npm install && npm run build && pm2 restart vote-app"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",

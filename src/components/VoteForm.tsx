@@ -19,14 +19,11 @@ const VoteForm: React.FC<VoteFormProps> = ({ projectName, onSubmit, onCancel }) 
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      <h3 className="text-xl font-semibold mb-4">Avaliar projeto: {projectName}</h3>
+      <h3 className="text-xl font-semibold mb-8">Avaliar projeto: {projectName}</h3>
       
       <form onSubmit={handleSubmit}>
-        <div className="mb-6">
-          <label className="block text-gray-700 font-medium mb-3">
-            Nota (1-10):
-          </label>
-          <div className="flex flex-wrap gap-2 mb-2">
+        <div className="mb-6">        
+          <div className="flex flex-wrap gap-2 mb-8">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
               <button
                 key={value}

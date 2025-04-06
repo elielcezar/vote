@@ -45,24 +45,23 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
-      <div className="container mx-auto px-4">
-        <header className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-blue-800 mb-2">Sistema de Votação</h1>
-          <p className="text-xl text-gray-600 mb-6">
-            Crie sua conta para participar
-          </p>
-          <Link href="/" className="text-blue-600 hover:underline">
-            Voltar para login
-          </Link>
-        </header>
-        
-        <div className="max-w-md mx-auto">
-          <RegisterForm onSubmit={registerParticipant} isLoading={isRegistering} />
-        </div>
-      </div>
-      
-      <Toaster position="bottom-center" />
-    </main>
+    <div className="wrapper flex">
+      <aside className="h-screen sticky top-0 w-6/12 ">
+        <header className="h-screen flex flex-col justify-center  p-5 text-left">
+          <h1 className="text-4xl font-bold text-blue-800 mb-2">Avalia+</h1>         
+        </header>        
+      </aside>
+
+      <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 w-6/12  flex items-center">      
+          <div className="container mx-auto px-4">           
+            <div className="max-w-md mx-auto">
+              <RegisterForm onSubmit={registerParticipant} isLoading={isRegistering} />
+              
+            </div>
+          </div>
+          
+          <Toaster position="bottom-center" />
+        </main>
+    </div>    
   );
 } 
