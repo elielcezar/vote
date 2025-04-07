@@ -7,7 +7,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import ProjectCard from '@/components/ProjectCard';
 import VoteForm from '@/components/VoteForm';
 import { getCookie } from 'cookies-next';
-import { setCookie, deleteCookie } from 'cookies-next';
+import { deleteCookie } from 'cookies-next';
 
 interface Project {
   id: number;
@@ -19,7 +19,6 @@ interface Project {
 export default function VotePage() {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
-  const [participant, setParticipant] = useState<Participant | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,17 +41,21 @@ export default function VotePage() {
   const fetchProjects = async () => {
     setIsLoading(true);
     try {
+      console.log('Buscando projetos...');
       const response = await fetch('/api/projects');
       
       if (!response.ok) {
-        throw new Error('Erro ao buscar projetos');
+        const errorData = await response.json();
+        console.error('Erro ao buscar projetos:', errorData);
+        throw new Error(errorData.error || 'Erro ao buscar projetos');
       }
       
       const data = await response.json();
+      console.log(`Encontrados ${data.length} projetos`);
       setProjects(data);
     } catch (error) {
+      console.error('Erro na requisição de projetos:', error);
       toast.error('Não foi possível carregar os projetos');
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -72,24 +75,47 @@ export default function VotePage() {
   };
 
   // Enviar o voto para a API
-  const handleSubmitVote = async (data: { score: number; comment: string }) => {
+  const handleSubmitVote = async (data: { 
+    projectId: number;
+    communicationScore: number; 
+    businessScore: number; 
+    creativityScore: number;
+    finalScore: number;
+    comment: string 
+  }) => {
     if (!token || !selectedProject) return;
     
     try {
+      console.log('Enviando voto:', { 
+        token, 
+        projectId: selectedProject.id,
+        communicationScore: data.communicationScore,
+        businessScore: data.businessScore,
+        creativityScore: data.creativityScore,
+        finalScore: data.finalScore,
+        comment: data.comment 
+      });
+      
       const response = await fetch('/api/votes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           token,
           projectId: selectedProject.id,
-          score: data.score,
+          communicationScore: data.communicationScore,
+          businessScore: data.businessScore,
+          creativityScore: data.creativityScore,
+          finalScore: data.finalScore,
           comment: data.comment
         }),
       });
       
+      const responseData = await response.json();
+      console.log('Resposta da API:', responseData);
+      
       if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.error || 'Erro ao registrar voto');
+        console.error('Erro da API:', responseData);
+        throw new Error(responseData.error || 'Erro ao registrar voto');
       }
       
       toast.success(`Voto registrado para o projeto "${selectedProject.title}"!`);
@@ -98,6 +124,7 @@ export default function VotePage() {
       // Atualizar a lista de projetos após o voto
       fetchProjects();
     } catch (error) {
+      console.error('Erro ao processar voto:', error);
       toast.error(error instanceof Error ? error.message : 'Erro ao registrar voto');
     }
   };
@@ -122,11 +149,10 @@ export default function VotePage() {
                       }
                       deleteCookie('voteToken');
                       setToken(null);
-                      setParticipant(null);
                       toast.success('Sessão encerrada com sucesso');
                       setTimeout(() => {
                         router.push('/');
-                      }, 1500);
+                      }, 500);
                     }}
                     className="text-red-600 hover:text-red-800 font-medium"
                   >
@@ -164,6 +190,8 @@ export default function VotePage() {
                 <VoteForm
                   projectId={selectedProject.id}
                   projectName={selectedProject.title}
+                  projectPresenter={selectedProject.presenter}
+                  projectDescription={selectedProject.description}
                   onSubmit={handleSubmitVote}
                   onCancel={handleCancelVote}
                 />

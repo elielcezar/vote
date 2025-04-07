@@ -34,14 +34,18 @@ model Participant {
 }
 
 model Vote {
-  id            Int         @id @default(autoincrement())
-  score         Int
-  comment       String?     @db.Text
-  createdAt     DateTime    @default(now())
-  participantId Int
-  projectId     Int
-  participant   Participant @relation(fields: [participantId], references: [id])
-  project       Project     @relation(fields: [projectId], references: [id])
+  id                  Int         @id @default(autoincrement())
+  communicationScore  Int
+  businessScore       Int
+  creativityScore     Int
+  finalScore          Int
+  score               Int?
+  comment             String?     @db.Text
+  createdAt           DateTime    @default(now())
+  participantId       Int
+  projectId           Int
+  participant         Participant @relation(fields: [participantId], references: [id])
+  project             Project     @relation(fields: [projectId], references: [id])
 
   @@unique([participantId, projectId])
 }
