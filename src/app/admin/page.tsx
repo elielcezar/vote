@@ -26,7 +26,7 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showNewProjectForm, setShowNewProjectForm] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [statsError, setStatsError] = useState<string | null>(null);
+  //const [statsError, setStatsError] = useState<string | null>(null);
   
   // Form state
   const [formData, setFormData] = useState({

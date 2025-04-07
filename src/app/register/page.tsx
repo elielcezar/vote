@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+//import Link from 'next/link';
 import { Toaster, toast } from 'react-hot-toast';
 import RegisterForm from '@/components/RegisterForm';
 import { setCookie } from 'cookies-next';
