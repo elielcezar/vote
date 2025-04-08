@@ -148,6 +148,8 @@ export async function GET() {
       
       // Buscar votos separadamente para evitar erros de tipo
       const projectIds = projects.map(p => p.id);
+      console.log('IDs dos projetos:', projectIds);
+      
       const votes = await prisma.vote.findMany({
         where: {
           projectId: { in: projectIds }
@@ -159,6 +161,7 @@ export async function GET() {
         }
       });
       console.log(`Encontrados ${votes.length} votos no total`);
+      console.log('Exemplo de voto:', votes[0]);
       
       // Calcular estatísticas para cada projeto
       const projectsWithStats = projects.map(project => {
@@ -176,20 +179,22 @@ export async function GET() {
         };
       });
       
-      console.log('Estatísticas calculadas com sucesso');
+      console.log('Estatísticas calculadas com sucesso:', projectsWithStats);
       return NextResponse.json(projectsWithStats);
     } catch (dbError) {
       console.error('Erro ao buscar dados do banco:', dbError);
       return NextResponse.json({
         error: 'Erro ao buscar dados do banco',
-        details: String(dbError)
+        details: String(dbError),
+        stack: dbError instanceof Error ? dbError.stack : undefined
       }, { status: 500 });
     }
   } catch (error) {
     console.error('Erro ao buscar estatísticas de votos:', error);
     return NextResponse.json({
       error: 'Erro ao buscar estatísticas de votos',
-      details: String(error)
+      details: String(error),
+      stack: error instanceof Error ? error.stack : undefined
     }, { status: 500 });
   }
 }

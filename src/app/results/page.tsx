@@ -63,7 +63,25 @@ export default function ResultsPage() {
           <p className="text-xl text-gray-600 mb-4">
             Conheça os projetos mais bem avaliados
           </p>
-          <Link href="/" className="text-blue-600 hover:underline">Voltar para página inicial</Link>
+          <Link href="/admin" className="text-blue-600 hover:underline">Painel Administrativo</Link>
+          <Link href="/vote" className="text-blue-600 hover:underline">Votação</Link>
+          <Link href="/profile" className="text-purple-600 hover:underline">Editar meu perfil</Link>
+          <button 
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        localStorage.removeItem('voteToken');
+                      }
+                      deleteCookie('voteToken');
+                      setToken(null);
+                      toast.success('Sessão encerrada com sucesso');
+                      setTimeout(() => {
+                        router.push('/');
+                      }, 500);
+                    }}
+                    className="text-red-600 hover:text-red-800 font-medium"
+                  >
+                  Sair
+                </button>
         </header>
 
         {isLoading ? (

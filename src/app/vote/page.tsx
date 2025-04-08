@@ -16,14 +16,22 @@ interface Project {
   presenter: string;
 }
 
+interface Participant {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
 export default function VotePage() {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
+  const [participant, setParticipant] = useState<Participant | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Verificar autenticação do usuário
+  // Verificar autenticação do usuário e buscar dados do participante
   useEffect(() => {
     const storedToken = localStorage.getItem('voteToken') || getCookie('voteToken')?.toString();
     
@@ -34,6 +42,33 @@ export default function VotePage() {
     }
     
     setToken(storedToken);
+    
+    // Buscar dados do participante
+    const fetchParticipant = async () => {
+      try {
+        const response = await fetch('/api/participants/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: storedToken }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Falha ao validar token');
+        }
+        
+        const data = await response.json();
+        if (data.valid && data.participant) {
+          setParticipant(data.participant);
+        } else {
+          throw new Error('Token inválido');
+        }
+      } catch (error) {
+        console.error('Erro ao validar participante:', error);
+        router.push('/');
+      }
+    };
+
+    fetchParticipant();
     fetchProjects();
   }, [router]);
 
@@ -140,8 +175,15 @@ export default function VotePage() {
                 Selecione um projeto para avaliar
               </p>
 
-              <div className="flex gap-4 justify-center">            
-                <Link href="/profile" className="text-purple-600 hover:underline">Editar meu perfil</Link>
+              <div className="flex gap-4 justify-center">          
+                {participant?.role === 'admin' && (
+                  <Link href="/admin" className="text-purple-600 hover:underline">
+                    Painel Administrativo
+                  </Link>
+                )}
+                <Link href="/profile" className="text-purple-600 hover:underline">
+                  Editar meu perfil
+                </Link>
                 <button 
                     onClick={() => {
                       if (typeof window !== 'undefined') {
@@ -149,6 +191,7 @@ export default function VotePage() {
                       }
                       deleteCookie('voteToken');
                       setToken(null);
+                      setParticipant(null);
                       toast.success('Sessão encerrada com sucesso');
                       setTimeout(() => {
                         router.push('/');
@@ -160,7 +203,6 @@ export default function VotePage() {
                 </button>
               </div>
             </>
-
           ) : null}
           
         </header>

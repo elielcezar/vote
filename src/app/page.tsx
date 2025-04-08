@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import LoginForm from '@/components/LoginForm';
 import { Toaster, toast } from 'react-hot-toast';
-import { setCookie, deleteCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
+import { useRouter } from 'next/navigation';
 
 interface Participant {
   id: number;
@@ -15,6 +16,7 @@ interface Participant {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
   const [participant, setParticipant] = useState<Participant | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -46,6 +48,13 @@ export default function Home() {
       setParticipant(result.participant);
       
       toast.success('Login realizado com sucesso!');
+
+      if (result.participant.role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/vote');
+      }
+
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Erro ao fazer login');
     } finally {
@@ -93,130 +102,28 @@ export default function Home() {
 
     <div className="wrapper flex flex-col md:flex-row h-screen outline bg-gradient-to-b from-gray-100 to-white">
 
-      <aside className={`md:h-screen md:sticky top-0 ${!token || !participant || participant.role !== 'admin' ? 'md:w-6/12' : 'md:w-2/12'}`}>
+      <aside className="md:h-screen md:sticky top-0 md:w-6/12 md:w-2/12">
         <header className="md:h-screen flex flex-col justify-center p-5 text-center items-center min-h-50 md:text-left md:items-start">
           <h1 className="text-4xl font-bold text-blue-800 mb-2">Avalia+</h1>
-          
-          {!token || !participant ? (
-            <p className="text-gray-600 m-0">
+
+          <p className="text-gray-600 m-0">
               Faça login para votar nos projetos ou {' '}
               <Link href="/register" className="text-blue-600 hover:underline">
                 registre-se
               </Link>
               {' '} se ainda não tem uma conta.
-            </p>       
-          ) : token && participant && participant.role === 'admin' ? (
-            <>
-              <p className="text-gray-600">Bem-vindo, {participant.name}!</p> 
-              <Link href="/results" className="text-sm bg-yellow-100 hover:bg-yellow-200 text-yellow-800 py-1 px-3 rounded mt-2 inline-block">
-                Resultados
-              </Link>
-
-              <Link href="/promote" className="text-sm bg-yellow-100 hover:bg-yellow-200 text-yellow-800 py-1 px-3 rounded mt-2 inline-block">
-                Promover Admin
-              </Link>
-
-              <Link href="/vote" className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg text-center my-4">
-                Votação
-              </Link>
-              
-                <button 
-                    onClick={() => {
-                      if (typeof window !== 'undefined') {
-                        localStorage.removeItem('voteToken');
-                      }
-                      deleteCookie('voteToken');
-                      setToken(null);
-                      setParticipant(null);
-                      toast.success('Sessão encerrada com sucesso');
-                    }}
-                    className="text-red-600 hover:text-red-800 font-medium"
-                  >
-                  Sair
-                </button>
+            </p>     
           
-            </>
-          ) : null}
-
-
-                      
+          
         </header>        
       </aside>
             
       <main className={`md:min-h-screen md:bg-gradient-to-b from-gray-100 to-white md:py-12 flex items-center ${!token || !participant || participant.role !== 'admin' ? 'md:w-6/12' : 'md:w-10/12'}`}>
 
-        <div className="container mx-auto px-4">         
-          {!token || !participant ? (            
-            <LoginForm onSubmit={loginParticipant} isLoading={isLoggingIn} />                         
-          ) : token && participant && participant.role !== 'admin' ? (
-            <div className="text-center py-8 bg-white p-8 rounded-xl shadow-lg max-w-md mx-auto">
-              <h2 className="text-2xl font-bold mb-4">Bem-vindo, {participant.name}!</h2>
-              <p className="mt-2 mb-8 text-gray-600">Agora você pode votar nos projetos apresentados.</p>
+        <div className="container mx-auto px-4"> 
+        <LoginForm onSubmit={loginParticipant} isLoading={isLoggingIn} />                         
 
-             
-                <Link 
-                  href="/vote" 
-                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg text-center mb-4"
-                >
-                  Votação
-                </Link>
-
-                <button 
-                onClick={() => {
-                  if (typeof window !== 'undefined') {
-                    localStorage.removeItem('voteToken');
-                  }
-                  deleteCookie('voteToken');
-                  setToken(null);
-                  setParticipant(null);
-                  toast.success('Sessão encerrada com sucesso');
-                }}
-                className="text-red-600 hover:text-red-800 font-medium"
-              >
-                Sair
-              </button>            
-              
-              {participant.role === 'admin' && (
-                <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-yellow-800 font-semibold">Você tem acesso de administrador</p>
-                  <div className="flex gap-2 mt-2 justify-center">
-                    <Link 
-                      href="/admin" 
-                      className="text-sm bg-yellow-100 hover:bg-yellow-200 text-yellow-800 py-1 px-3 rounded"
-                    >
-                      Painel Admin
-                    </Link>
-                    
-                   
-                  </div>
-                </div>
-              )}
-              
-              
-            </div>
-          ) : token && participant && participant.role === 'admin' ? (
-            <div className="text-center py-8 bg-white p-8 rounded-xl shadow-lg max-w-md mx-auto">
-              <h2 className="text-2xl font-bold mb-4">Bem-vindo, {participant.name}!</h2>                  
-              
-              {participant.role === 'admin' && (
-                <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-yellow-800 font-semibold">Você tem acesso de administrador</p>
-                  <div className="flex gap-2 mt-2 justify-center">
-                    <Link 
-                      href="/admin" 
-                      className="text-sm bg-yellow-100 hover:bg-yellow-200 text-yellow-800 py-1 px-3 rounded"
-                    >
-                      Painel Admin
-                    </Link>
-                    
-                   
-                  </div>
-                </div>
-              )}
-              
-              
-            </div>
-          ) : null }
+          
         </div>
 
         <Toaster position="bottom-center" />

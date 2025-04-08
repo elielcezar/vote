@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Toaster, toast } from 'react-hot-toast';
 import Button from '@/components/Button';
+import { deleteCookie } from 'cookies-next';
 
 interface Project {
   id: number;
@@ -21,6 +23,8 @@ interface ProjectStats {
 }
 
 export default function AdminPage() {
+  const [setToken] = useState<string | null>(null);
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectStats, setProjectStats] = useState<ProjectStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -360,14 +364,32 @@ export default function AdminPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
+    <main className="min-h-screen bg-gradient-to-b from-gray-100 to-white py-12">
       <div className="container mx-auto px-4">
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold text-blue-800 mb-2">Painel Administrativo</h1>
           <p className="text-xl text-gray-600 mb-4">
             Gerencie projetos e veja estatísticas de votação
           </p>
-          <Link href="/" className="text-blue-600 hover:underline">Voltar para página inicial</Link>
+          <Link href="/vote" className="text-blue-600 hover:underline">Votação</Link>
+          <Link href="/results" className="text-purple-600 hover:underline">Resultados</Link>
+          <Link href="/profile" className="text-purple-600 hover:underline">Editar meu perfil</Link>
+                <button 
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        localStorage.removeItem('voteToken');
+                      }
+                      deleteCookie('voteToken');
+                      setToken(null);
+                      toast.success('Sessão encerrada com sucesso');
+                      setTimeout(() => {
+                        router.push('/');
+                      }, 500);
+                    }}
+                    className="text-red-600 hover:text-red-800 font-medium"
+                  >
+                  Sair
+                </button>
         </header>
 
         {/* Botão para adicionar novo projeto */}

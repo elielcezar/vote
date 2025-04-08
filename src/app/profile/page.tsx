@@ -8,13 +8,12 @@ import Button from '@/components/Button';
 import { getCookie, deleteCookie } from 'cookies-next';
 
 // Definição da interface Participant para uso no estado
-/*interface Participant {
+interface Participant {
   id: number;
   name: string;
   email: string;
-  role: string;
-  createdAt: string;
-}*/
+  role: string;  
+}
 
 // Tipo para os dados de atualização
 interface UpdateProfileData {
@@ -27,6 +26,7 @@ interface UpdateProfileData {
 
 export default function ProfilePage() {
   const router = useRouter();
+  const [participant, setParticipant] = useState<Participant | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -46,6 +46,7 @@ export default function ProfilePage() {
 
   // Carregar informações do perfil
   useEffect(() => {
+    const storedToken = localStorage.getItem('voteToken') || getCookie('voteToken')?.toString();
     const fetchProfile = async () => {
       setIsLoading(true);
       const token = localStorage.getItem('voteToken') || getCookie('voteToken')?.toString();
@@ -85,7 +86,33 @@ export default function ProfilePage() {
         setIsLoading(false);
       }
     };
-    
+
+    // Buscar dados do participante
+    const fetchParticipant = async () => {
+      try {
+        const response = await fetch('/api/participants/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: storedToken }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Falha ao validar token');
+        }
+        
+        const data = await response.json();
+        if (data.valid && data.participant) {
+          setParticipant(data.participant);
+        } else {
+          throw new Error('Token inválido');
+        }
+      } catch (error) {
+        console.error('Erro ao validar participante:', error);
+        router.push('/');
+      }
+    };
+
+    fetchParticipant();    
     fetchProfile();
   }, [router]);
 
@@ -213,7 +240,12 @@ export default function ProfilePage() {
           <p className="text-xl text-gray-600 mb-6">
             Edite suas informações pessoais
           </p>
-          <div className="flex gap-4 justify-center">            
+          <div className="flex gap-4 justify-center">    
+            {participant?.role === 'admin' && (
+              <Link href="/admin" className="text-purple-600 hover:underline">
+                Painel Administrativo
+              </Link>
+            )}
             <Link href="/vote" className="text-green-600 hover:underline">
               Ir para votação
             </Link>
