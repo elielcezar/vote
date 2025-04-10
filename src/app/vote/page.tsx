@@ -227,18 +227,20 @@ export default function VotePage() {
               ))
             )}
             
-            {selectedProject && (
-              <div className="col-span-full md:col-span-2 md:col-start-1 lg:col-start-2 lg:col-span-1">
-                <VoteForm
-                  projectId={selectedProject.id}
-                  projectName={selectedProject.title}
-                  projectPresenter={selectedProject.presenter}
-                  projectDescription={selectedProject.description}
-                  onSubmit={handleSubmitVote}
-                  onCancel={handleCancelVote}
-                />
-              </div>
-            )}
+            
+          </div>
+        )}
+
+        {selectedProject && (
+          <div className="col-span-full md:col-span-2 md:col-start-1 lg:col-start-2 lg:col-span-1 max-w-xl mx-auto">
+            <VoteForm
+              projectId={selectedProject.id}
+              projectName={selectedProject.title}
+              projectPresenter={selectedProject.presenter}
+              projectDescription={selectedProject.description}
+              onSubmit={handleSubmitVote}
+              onCancel={handleCancelVote}
+            />
           </div>
         )}
       </div>

@@ -371,40 +371,29 @@ export default function AdminPage() {
           <p className="text-xl text-gray-600 mb-4">
             Gerencie projetos e veja estatísticas de votação
           </p>
-          <Link href="/vote" className="text-blue-600 hover:underline">Votação</Link>
-          <Link href="/results" className="text-purple-600 hover:underline">Resultados</Link>
-          <Link href="/profile" className="text-purple-600 hover:underline">Editar meu perfil</Link>
-                <button 
-                    onClick={() => {
-                      if (typeof window !== 'undefined') {
-                        localStorage.removeItem('voteToken');
-                      }
-                      deleteCookie('voteToken');
-                      setToken(null);
-                      toast.success('Sessão encerrada com sucesso');
-                      setTimeout(() => {
-                        router.push('/');
-                      }, 500);
-                    }}
-                    className="text-red-600 hover:text-red-800 font-medium"
-                  >
-                  Sair
-                </button>
-        </header>
-
-        {/* Botão para adicionar novo projeto */}
-        <div className="mb-8 flex justify-center">
-          <Button 
-            onClick={() => {
-              setEditingProject(null);
-              setFormData({ title: '', description: '', presenter: '' });
-              setShowNewProjectForm(!showNewProjectForm);
-            }}
-            variant={showNewProjectForm ? 'secondary' : 'primary'}
-          >
-            {showNewProjectForm ? 'Cancelar' : 'Adicionar Novo Projeto'}
-          </Button>
-        </div>
+          <Link href="/vote" className="text-blue-600 hover:underline p-5">Votação</Link>
+          <Link href="/results" className="text-purple-600 hover:underline p-5">Resultados</Link>
+          <Link href="/profile" className="text-purple-600 hover:underline p-5">Editar meu perfil</Link>
+          <button 
+              onClick={() => {
+                localStorage.removeItem('voteToken');
+                deleteCookie('voteToken');
+                setFormData({
+                  name: '',
+                  email: '',
+                  newPassword: '',
+                  confirmPassword: ''
+                });
+                toast.success('Sessão encerrada com sucesso');
+                setTimeout(() => {
+                  router.push('/');
+                }, 1500);
+              }}
+              className="text-red-600 hover:text-red-800 font-medium"
+            >
+              Sair
+            </button>
+        </header>        
 
         {/* Formulário para novo projeto */}
         {showNewProjectForm && (
@@ -467,6 +456,20 @@ export default function AdminPage() {
             </form>
           </div>
         )}
+
+        {/* Botão para adicionar novo projeto */}
+        <div className="mb-8 flex justify-center">
+          <Button 
+            onClick={() => {
+              setEditingProject(null);
+              setFormData({ title: '', description: '', presenter: '' });
+              setShowNewProjectForm(!showNewProjectForm);
+            }}
+            variant={showNewProjectForm ? 'secondary' : 'primary'}
+          >
+            {showNewProjectForm ? 'Cancelar' : 'Adicionar Novo Projeto'}
+          </Button>
+        </div>
 
         {/* Seção de estatísticas */}
         <section className="mb-12">

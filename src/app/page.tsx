@@ -100,11 +100,11 @@ export default function Home() {
 
   return (
 
-    <div className="wrapper flex flex-col md:flex-row h-screen outline bg-gradient-to-b from-gray-100 to-white">
+    <div className="wrapper flex flex-col md:flex-row h-screen outline bg-gradient-to-b bg-slate-50">
 
-      <aside className="md:h-screen md:sticky top-0 md:w-6/12 md:w-2/12">
-        <header className="md:h-screen flex flex-col justify-center p-5 text-center items-center min-h-50 md:text-left md:items-start">
-          <h1 className="text-4xl font-bold text-blue-800 mb-2">Avalia+</h1>
+      <aside className="md:h-screen md:sticky top-0 md:w-6/12">
+        <header className="md:h-screen flex flex-col justify-center p-5 text-center items-center min-h-50 md:text-left md:items-start px-15">
+          <h1 className="text-4xl font-bold text-blue-800 mb-2">Sistema de votação</h1>
 
           <p className="text-gray-600 m-0">
               Faça login para votar nos projetos ou {' '}
@@ -118,7 +118,10 @@ export default function Home() {
         </header>        
       </aside>
             
-      <main className={`md:min-h-screen md:bg-gradient-to-b from-gray-100 to-white md:py-12 flex items-center ${!token || !participant || participant.role !== 'admin' ? 'md:w-6/12' : 'md:w-10/12'}`}>
+      <main 
+        className="md:min-h-screen md:bg-gradient-to-b from-gray-100 to-white md:py-12 flex items-center md:w-6/12 bg-cover bg-center"
+        style={{ backgroundImage: 'url(/background.jpg)' }}
+      >
 
         <div className="container mx-auto px-4"> 
         <LoginForm onSubmit={loginParticipant} isLoading={isLoggingIn} />                         

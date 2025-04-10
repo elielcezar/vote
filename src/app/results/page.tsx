@@ -63,9 +63,9 @@ export default function ResultsPage() {
           <p className="text-xl text-gray-600 mb-4">
             Conheça os projetos mais bem avaliados
           </p>
-          <Link href="/admin" className="text-blue-600 hover:underline">Painel Administrativo</Link>
-          <Link href="/vote" className="text-blue-600 hover:underline">Votação</Link>
-          <Link href="/profile" className="text-purple-600 hover:underline">Editar meu perfil</Link>
+          <Link href="/admin" className="text-blue-600 hover:underline p-5">Painel Administrativo</Link>
+          <Link href="/vote" className="text-blue-600 hover:underline p-5">Votação</Link>
+          <Link href="/profile" className="text-purple-600 hover:underline p-5">Editar meu perfil</Link>
           <button 
                     onClick={() => {
                       if (typeof window !== 'undefined') {
