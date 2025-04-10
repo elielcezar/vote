@@ -23,7 +23,7 @@ interface ProjectStats {
 }
 
 export default function AdminPage() {
-  const [setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectStats, setProjectStats] = useState<ProjectStats[]>([]);
@@ -82,10 +82,10 @@ export default function AdminPage() {
       
       setProjects(data);
       
-      // Se não houver projetos, criar alguns projetos de exemplo
+      // Se não houver projetos
       if (data.length === 0) {
         console.log('Nenhum projeto encontrado, criando projetos de exemplo...');
-        await createSampleProjects();
+        //await createSampleProjects();
       }
     } catch (error) {
       console.error('Erro completo ao buscar projetos:', error);
@@ -249,7 +249,7 @@ export default function AdminPage() {
   };
 
   // Criar projetos de exemplo
-  const createSampleProjects = async () => {
+  /*const createSampleProjects = async () => {
     try {
       const sampleProjects = [
         {
@@ -283,7 +283,7 @@ export default function AdminPage() {
       console.error('Erro ao criar projetos de exemplo:', error);
       toast.error('Erro ao criar projetos de exemplo');
     }
-  };
+  };*/
 
   // Componente para renderizar a tabela de projetos
   const renderProjectsTable = () => {
@@ -368,6 +368,11 @@ export default function AdminPage() {
       <div className="container mx-auto px-4">
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold text-blue-800 mb-2">Painel Administrativo</h1>
+          <p>
+          {token ? (
+                <span>Você está logado como {participant?.name || 'usuário'}.</span>
+              ) : null}
+          </p>
           <p className="text-xl text-gray-600 mb-4">
             Gerencie projetos e veja estatísticas de votação
           </p>
@@ -378,6 +383,7 @@ export default function AdminPage() {
               onClick={() => {
                 localStorage.removeItem('voteToken');
                 deleteCookie('voteToken');
+                setToken(null);
                 setFormData({
                   name: '',
                   email: '',

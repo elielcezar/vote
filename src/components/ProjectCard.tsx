@@ -21,7 +21,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onVote, isSelected =
     <div className={`border rounded-lg p-4 mb-4 shadow-sm ${isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-sm text-gray-500 mb-2">Apresentado por: {presenter}</p>
-      {/*<p className="text-gray-700 mb-4">{description}</p>*/}
+      {<p className="text-gray-700 mb-4 hidden">{description}</p>}
       <Button 
         onClick={() => onVote(id)} 
         variant={isSelected ? 'primary' : 'secondary'}

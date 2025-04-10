@@ -17,7 +17,9 @@ interface Participant {
 
 export default function Home() {
   const router = useRouter();
+  // eslint-disable-next-line no-unused-vars
   const [token, setToken] = useState<string | null>(null);
+  // eslint-disable-next-line no-unused-vars
   const [participant, setParticipant] = useState<Participant | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
@@ -99,7 +101,6 @@ export default function Home() {
   }, []);
 
   return (
-
     <div className="wrapper flex flex-col md:flex-row h-screen outline bg-gradient-to-b bg-slate-50">
 
       <aside className="md:h-screen md:sticky top-0 md:w-6/12">
@@ -107,12 +108,18 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-blue-800 mb-2">Sistema de votação</h1>
 
           <p className="text-gray-600 m-0">
-              Faça login para votar nos projetos ou {' '}
-              <Link href="/register" className="text-blue-600 hover:underline">
-                registre-se
-              </Link>
-              {' '} se ainda não tem uma conta.
-            </p>     
+              {token ? (
+                <span>Você está logado como {participant?.name || 'usuário'}.</span>
+              ) : (
+                <span>
+                  Faça login para votar nos projetos ou {' '}
+                  <Link href="/register" className="text-blue-600 hover:underline">
+                    registre-se
+                  </Link>
+                  {' '} se ainda não tem uma conta.
+                </span>
+              )}
+          </p>     
           
           
         </header>        
